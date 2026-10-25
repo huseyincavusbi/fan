@@ -1,0 +1,44 @@
+# /usr/local/etc/fan.conf
+# This file is OPTIONAL: without it the curve embedded in the binary is used.
+# Reload after editing: sudo launchctl kickstart -k system/local.fan.daemon
+
+# Curve points: temperature:value
+#   value: RPM number | min | max | a percentage such as 50%
+points = 60:min, 68:3000, 75:3500, 85:max
+
+# Temperature key prefixes to read (discovered on this machine)
+sensors = Tp
+
+# Below this temperature the fans are handed back to macOS auto
+release_below = 60
+
+# Hysteresis (C) and RPM change rate limits
+hysteresis = 3
+slew_up = 500
+slew_down = 150
+
+# Control loop interval (seconds)
+tick = 3
+
+# Spike filter: consecutive ticks above the threshold required to engage,
+# minimum engagement time, and how far below the threshold to release
+# Engagement gate: fan starts only after this many consecutive ticks
+# at or above this temperature (brief flickers never engage)
+engage_above = 70
+engage_sustain = 5
+min_hold = 30
+release_hysteresis = 5
+
+# Include the GPU (Tg) sensors: control temp becomes max(cpu, gpu)
+include_gpu = true
+
+# How sensor readings are combined: median-filtered average.
+# Readings further than median_tolerance from the median are dropped.
+median_tolerance = 15
+
+# Respect external control (e.g. Stats) by backing off
+respect_external = true
+external_hold = 300
+
+# Above this temperature the curve stops and fans return to auto
+thermal_guard = 100
